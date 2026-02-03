@@ -1,4 +1,7 @@
 asgiref==3.11.0
 Django==6.0.1
 djangorestframework==3.16.1
+psycopg==3.3.2  # Новая библиотека, преемник psycorg2
+python-dotenv==1.2.1  # Библиотека для работы с .env
 sqlparse==0.5.5
+typing_extensions==4.15.0
