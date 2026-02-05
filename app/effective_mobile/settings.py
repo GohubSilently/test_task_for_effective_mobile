@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 
+from django.conf.global_settings import CSRF_COOKIE_SECURE
 from django.core.management.utils import get_random_secret_key
 from dotenv import load_dotenv
 
@@ -12,6 +13,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv(key='SECRET_KEY', default=get_random_secret_key())
 DEBUG = os.getenv(key='DEBUG', default='False').lower() == 'true'
 ALLOWED_HOSTS = os.getenv(key='ALLOWED_HOSTS', default='localhost 127.0.0.1').split()
+CSRF_TRUSTED_ORIGINS = ['http://localhost:8000', 'http://127.0.0.1:8000']
+
+
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -21,6 +25,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'api',
     'users'
 ]
 
