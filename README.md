@@ -4,7 +4,7 @@
 ## Установка
 1. Клонируем репозиторий.
 ```
-git clone 
+git clone git@github.com:GohubSilently/test_task_for_effective_mobile.git
 cd test_task_for_effective_mobile
 ```
 
