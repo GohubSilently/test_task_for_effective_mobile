@@ -8,6 +8,9 @@ class BaseModel(models.Model):
     name = models.CharField('Название')
     description = models.CharField('Описание')
 
+    class Meta:
+        abstract = True
+
 
 class Role(BaseModel, models.Model):
     class Meta:

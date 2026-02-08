@@ -40,9 +40,35 @@ class LoginSerializer(serializers.Serializer):
 
 
 class UpdateSerializer(UserMixin, serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True)
+    new_password = serializers.CharField(write_only=True)
     class Meta:
         model = User
-        fields = (*UserMixin.field,)
+        fields = (*UserMixin.field, 'password', 'new_password')
+
+    def validate(self, attrs):
+        user = self.instance
+
+        password = attrs.get('password')
+        new_password = attrs.get('new_password')
+        if new_password:
+            if not password:
+                raise serializers.ValidationError({'password': 'Обязателен для смены пароля!'})
+            if not user.check_password(password):
+                raise serializers.ValidationError({'password': 'Неверный пароль!'})
+        return attrs
+
+    def update(self, instance, validated_data):
+        new_password = validated_data.pop('new_password')
+        validated_data.pop('password')
+
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        if new_password:
+            instance.set_password(new_password)
+        instance.save()
+        return instance
+
 
     def to_representation(self, instance):
         result = super().to_representation(instance)

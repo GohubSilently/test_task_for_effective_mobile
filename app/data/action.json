@@ -1,0 +1,6 @@
+[
+  {"name":  "post", "description": "Отправить"},
+  {"name":  "get", "description": "Получить"},
+  {"name":  "delete", "description": "Удалить"},
+  {"name":  "put", "description": "Изменить"}
+]

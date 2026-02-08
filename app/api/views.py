@@ -1,5 +1,6 @@
 from statistics import mode
 
+from drf_spectacular.utils import extend_schema
 from rest_framework import status
 from rest_framework.generics import CreateAPIView, GenericAPIView
 from rest_framework.response import Response
@@ -11,12 +12,15 @@ from .permissions import CustomPermission
 from .serializers import ChangePermissionSerializer, RegistrationSerializer, LoginSerializer, UpdateSerializer
 
 
+@extend_schema(tags=['AUTH'])
 class RegistrationView(CreateAPIView):
     serializer_class = RegistrationSerializer
+    authentication_classes = []
 
-
+@extend_schema(tags=['AUTH'])
 class LoginView(GenericAPIView):
     serializer_class = LoginSerializer
+    authentication_classes = []
 
     def post(self, request):
         serializer = self.get_serializer(data=request.data)
@@ -35,36 +39,33 @@ class LoginView(GenericAPIView):
             session = Session.objects.create(user=user)
         return Response({'session_token': f'{session.session_token}'}, status.HTTP_200_OK)
 
-
+@extend_schema(tags=['PROFILE'])
 class UpdateView(CustomPermission, GenericAPIView):
     serializer_class = UpdateSerializer
     resource = 'profile'
 
     def put(self, request):
-        self.check(request)
         serializer = self.get_serializer(data=request.data, instance=request.user, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
 
-
+@extend_schema(tags=['AUTH'])
 class LogoutView(APIView):
-    resource = 'profile'
     def post(self, request):
         request.auth.delete()
         return Response({'message': 'Вы успешно разлогинились!'}, status.HTTP_200_OK)
 
-
+@extend_schema(tags=['PROFILE'])
 class DeleteView(CustomPermission, APIView):
     resource = 'profile'
     def delete(self, request):
-        self.check(request)
         request.user.is_active = False
         request.user.save()
         request.auth.delete()
         return Response({'message': 'Ваш аккаунт удален!'}, status.HTTP_204_NO_CONTENT)
 
-
+@extend_schema(tags=['CHANGE_PERMISSIONS'])
 class ChangePermissionViewSet(CustomPermission, ModelViewSet):
     queryset = Permission.objects.all()
     serializer_class = ChangePermissionSerializer

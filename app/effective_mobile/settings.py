@@ -26,7 +26,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'api',
-    'users'
+    'users',
+    'drf_spectacular',
 ]
 
 MIDDLEWARE = [
@@ -40,9 +41,18 @@ MIDDLEWARE = [
 ]
 
 REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_TAGS': ['API'],
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'api.authentication.SessionAuthentication',
-    ]
+    ],
+
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'API',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False
 }
 
 ROOT_URLCONF = 'effective_mobile.urls'
