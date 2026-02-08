@@ -39,6 +39,12 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'api.authentication.SessionAuthentication',
+    ]
+}
+
 ROOT_URLCONF = 'effective_mobile.urls'
 
 TEMPLATES = [

@@ -1,7 +1,16 @@
 asgiref==3.11.0
+bcrypt==5.0.0
+diff-match-patch==20241021
 Django==6.0.1
+django-import-export==4.4.0
+django-stubs==5.2.9
+django-stubs-ext==5.2.9
 djangorestframework==3.16.1
-psycopg==3.3.2  # Новая библиотека, преемник psycorg2
-python-dotenv==1.2.1  # Библиотека для работы с .env
+djangorestframework-stubs==3.16.8
+psycopg==3.3.2
+psycopg2-binary==2.9.11
+python-dotenv==1.2.1
 sqlparse==0.5.5
+tablib==3.9.0
+types-PyYAML==6.0.12.20250915
 typing_extensions==4.15.0

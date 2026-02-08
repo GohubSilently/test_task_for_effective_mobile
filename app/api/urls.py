@@ -1,11 +1,27 @@
-from django.urls import path
+from django.urls import include, path
+from rest_framework import routers
 
-from .views import DeleteView, LoginView, RegistrationView, LogoutView, UpdateView
+from .views import (
+    ChangePermissionViewSet, DeleteView, LoginView, LogoutView,
+    RegistrationView, UpdateView
+)
 
-urlpatterns = [
+router = routers.DefaultRouter()
+router.register('change_permissions', ChangePermissionViewSet)
+
+auth_router = [
     path('registration/', RegistrationView.as_view()),
     path('login/', LoginView.as_view()),
     path('logout/', LogoutView.as_view()),
-    path('delete/', DeleteView.as_view()),
-    path('update/', UpdateView.as_view())
+]
+
+profile_router = [
+    path('update/', UpdateView.as_view()),
+    path('delete/', DeleteView.as_view())
+]
+
+urlpatterns = [
+    path('auth/', include(auth_router)),
+    path('profile/', include(profile_router)),
+    path('', include(router.urls))
 ]
