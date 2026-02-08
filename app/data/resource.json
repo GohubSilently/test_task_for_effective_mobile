@@ -1,0 +1,4 @@
+[
+  {"name":  "profile", "description": "Изменение профиля"},
+  {"name":  "change_permissions", "description": "Изменение прав"}
+]
