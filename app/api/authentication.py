@@ -23,4 +23,3 @@ class SessionAuthentication(BaseAuthentication):
             raise AuthenticationFailed('Ваш аккаунт удален!')
 
         return user, session
-2

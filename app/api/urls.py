@@ -1,5 +1,6 @@
 from django.urls import include, path
 from rest_framework import routers
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
 from .views import (
     ChangePermissionViewSet, DeleteView, LoginView, LogoutView,
@@ -20,8 +21,14 @@ profile_router = [
     path('delete/', DeleteView.as_view())
 ]
 
+documantation_router = [
+    path('schema/', SpectacularAPIView.as_view(authentication_classes=[]), name='schema'),
+    path('swagger/', SpectacularSwaggerView.as_view(authentication_classes=[]), name='docs'),
+]
+
 urlpatterns = [
     path('auth/', include(auth_router)),
+    path('docs/', include(documantation_router)),
     path('profile/', include(profile_router)),
     path('', include(router.urls))
 ]

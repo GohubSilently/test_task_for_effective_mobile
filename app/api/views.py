@@ -1,6 +1,4 @@
-from statistics import mode
-
-from drf_spectacular.utils import extend_schema
+from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework import status
 from rest_framework.generics import CreateAPIView, GenericAPIView
 from rest_framework.response import Response
@@ -12,12 +10,19 @@ from .permissions import CustomPermission
 from .serializers import ChangePermissionSerializer, RegistrationSerializer, LoginSerializer, UpdateSerializer
 
 
-@extend_schema(tags=['AUTH'])
+@extend_schema(tags=['Authentication'])
+@extend_schema_view(
+    post=extend_schema(summary='Регистрация пользователей')
+)
 class RegistrationView(CreateAPIView):
     serializer_class = RegistrationSerializer
     authentication_classes = []
 
-@extend_schema(tags=['AUTH'])
+
+@extend_schema(tags=['Authentication'])
+@extend_schema_view(
+    post=extend_schema(summary='Логин пользователя')
+)
 class LoginView(GenericAPIView):
     serializer_class = LoginSerializer
     authentication_classes = []
@@ -39,7 +44,22 @@ class LoginView(GenericAPIView):
             session = Session.objects.create(user=user)
         return Response({'session_token': f'{session.session_token}'}, status.HTTP_200_OK)
 
-@extend_schema(tags=['PROFILE'])
+
+@extend_schema(tags=['Authentication'])
+@extend_schema_view(
+    post=extend_schema(summary='Выход пользователя')
+)
+class LogoutView(APIView):
+
+    def post(self, request):
+        request.auth.delete()
+        return Response({'message': 'Вы успешно разлогинились!'}, status.HTTP_200_OK)
+
+
+@extend_schema(tags=['Profile'])
+@extend_schema_view(
+    put=extend_schema(summary='Обновление пользователя (ФИО, пароль)')
+)
 class UpdateView(CustomPermission, GenericAPIView):
     serializer_class = UpdateSerializer
     resource = 'profile'
@@ -50,22 +70,30 @@ class UpdateView(CustomPermission, GenericAPIView):
         serializer.save()
         return Response(serializer.data)
 
-@extend_schema(tags=['AUTH'])
-class LogoutView(APIView):
-    def post(self, request):
-        request.auth.delete()
-        return Response({'message': 'Вы успешно разлогинились!'}, status.HTTP_200_OK)
 
-@extend_schema(tags=['PROFILE'])
+@extend_schema(tags=['Profile'])
+@extend_schema_view(
+    destroy=extend_schema(summary='Удаление пользователя')
+)
 class DeleteView(CustomPermission, APIView):
     resource = 'profile'
+
     def delete(self, request):
         request.user.is_active = False
         request.user.save()
         request.auth.delete()
         return Response({'message': 'Ваш аккаунт удален!'}, status.HTTP_204_NO_CONTENT)
 
-@extend_schema(tags=['CHANGE_PERMISSIONS'])
+
+@extend_schema(tags=['Change_permissions'])
+@extend_schema_view(
+    list=extend_schema(summary='Получить список прав доступа'),
+    create=extend_schema(summary='Создание права доступа'),
+    retrieve=extend_schema(summary='Детальная информация о праве доступа'),
+    update=extend_schema(summary='Полное обновление права доступа'),
+    partial_update=extend_schema(summary='Частичное обновление права доступа'),
+    destroy=extend_schema(summary='Удаление права доступа'),
+)
 class ChangePermissionViewSet(CustomPermission, ModelViewSet):
     queryset = Permission.objects.all()
     serializer_class = ChangePermissionSerializer
@@ -74,5 +102,3 @@ class ChangePermissionViewSet(CustomPermission, ModelViewSet):
     def initial(self, request, *args, **kwargs):
         super().initial(request, *args, **kwargs)
         self.check(request)
-
-
