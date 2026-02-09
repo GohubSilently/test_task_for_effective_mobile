@@ -112,6 +112,8 @@ ALLOWED_HOSTS=localhost 127.0.0.1
 
 3. Загружаем данные.
 ```
+pip install --upgrade pip & pip install -r requirements.txt
+cd app
 python manage.py migrate
 python manage.py load_action && python manage.py load_role && python manage.py load_resource && python manage.py load_permission
 python manage.py load_user && python manage.py load_session
